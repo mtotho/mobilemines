@@ -8,24 +8,36 @@
  * Controller of the mobileminesApp
  */
 angular.module('mobileminesApp')
-  .controller('MapCtrl', function ($scope, $mdSidenav) {
+  .controller('MapCtrl', function ($scope, User, $mdSidenav) {
  		var vm=this;
 
- 		vm.map={
-			center:{
-				latitude:45,
-				longitude:-73
-			},
-			zoom:8,
- 			options:{
- 				panControl:false,
- 				streetViewControl:false,
- 				zoomControl:false
- 			},
- 			control:{},
- 			events:{}
- 		};
+ 		
 
+
+ 		function init(){
+ 			vm.map={
+				center:{
+					latitude:45,
+					longitude:-73
+				},
+				zoom:20,
+	 			options:{
+	 				panControl:false,
+	 				streetViewControl:false,
+	 				zoomControl:false
+	 			},
+	 			control:{},
+	 			events:{}
+			};
+
+
+			setCurrentPosition();
+
+ 		}
+ 		init();	
+
+
+ 		
 
  		vm.closeMenu = function(menu) {
 	    	$mdSidenav(menu).close();
@@ -34,6 +46,21 @@ angular.module('mobileminesApp')
  		vm.openMenu = function(menu) {
 	    	$mdSidenav(menu).toggle();
 	  	};
+
+
+	  	function setCurrentPosition(){
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(position){
+					$scope.$apply(function(){
+					 	vm.map.center={
+					 		latitude:position.coords.latitude,
+					    	longitude:position.coords.longitude
+					 	}
+					});
+				});
+			}
+	 	}
+
 
 		$scope.$on('$viewContentLoaded', function () {
 			setMapHeight();
