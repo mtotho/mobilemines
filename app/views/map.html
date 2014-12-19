@@ -1,5 +1,33 @@
 <style>
 	.angular-google-map-container { height: 100%; }
+
+	#mapMenuFabs{
+		position:absolute;
+		top:25px;
+		left:25px;
+	}
 </style>
 
-<ui-gmap-google-map center='vm.map.center' zoom='vm.map.zoom' events='vm.map.events' control='vm.map.control'></ui-gmap-google-map>
+<div id="mapMenuFabs">
+
+
+	<md-button class="md-fab" aria-label="Menu" ng-click="vm.openMenu('left')">
+	    <md-icon icon="images/icons/ic_menu_24px.svg" style="width: 24px; height: 24px;"></md-icon>
+	</md-button>
+</div>
+
+
+<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
+      <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools">Mobile Mines</h1>
+      </md-toolbar>
+      <md-content class="md-padding"
+        <md-button ng-click="vm.closeMenu('left')" class="md-primary" hide-gt-md>
+          Close Sidenav Left
+        </md-button>
+       
+      </md-content>
+</md-sidenav>
+
+
+<ui-gmap-google-map center='vm.map.center' zoom='vm.map.zoom' options='vm.map.options' events='vm.map.events' control='vm.map.control'></ui-gmap-google-map>

@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
- 
+
 angular
   .module('mobileminesApp', [
     'ngAnimate',
@@ -18,6 +18,7 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
+    'ngMaterial',
     'uiGmapgoogle-maps'
   ])
   .config(function ($routeProvider, uiGmapGoogleMapApiProvider) {

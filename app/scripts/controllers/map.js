@@ -8,19 +8,32 @@
  * Controller of the mobileminesApp
  */
 angular.module('mobileminesApp')
-  .controller('MapCtrl', function ($scope,  uiGmapGoogleMapApi, uiGmapIsReady) {
+  .controller('MapCtrl', function ($scope, $mdSidenav) {
  		var vm=this;
 
  		vm.map={
- 			center:{
- 				latitude:45,
- 				longitude:-73
+			center:{
+				latitude:45,
+				longitude:-73
+			},
+			zoom:8,
+ 			options:{
+ 				panControl:false,
+ 				streetViewControl:false,
+ 				zoomControl:false
  			},
- 			zoom:8,
  			control:{},
  			events:{}
  		};
 
+
+ 		vm.closeMenu = function(menu) {
+	    	$mdSidenav(menu).close();
+	  	};
+
+ 		vm.openMenu = function(menu) {
+	    	$mdSidenav(menu).toggle();
+	  	};
 
 		$scope.$on('$viewContentLoaded', function () {
 			setMapHeight();
