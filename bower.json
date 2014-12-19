@@ -15,7 +15,8 @@
     "angular-material": "latest",
     "hammerjs": "latest",
     "lodash": "latest",
-    "jquery":"latest"
+    "jquery":"latest",
+    "angular-google-maps"
   },
   "devDependencies": {
     "angular-mocks": "~1.3.0",
