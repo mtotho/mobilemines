@@ -16,8 +16,13 @@ angular.module('mobileminesApp')
    	function init(){
 	 	vm.user =
 
-	 	vm.user = userService.checkUser();
-	 	console.log(vm.user);
+	 	userService.checkUser(function(user){
+	 		vm.user=user;
+	 		console.log(user);
+	 	});
+
+	 
+	 
    	}
    	init();
 

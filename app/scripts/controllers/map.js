@@ -67,14 +67,18 @@ angular.module('mobileminesApp')
 			 	
 			});
 
-			var user = userService.checkUser();
-			
-			if(user!==null){
-				API.user.setUserLocation(user.uid, {
-						latitude:position.coords.latitude, 
-						longitude:position.coords.longitude
-				});
-			}
+			userService.checkUser(function(user){
+
+				if(user!==null){
+					console.log(position);
+					API.user.setUserLocation(user.uid, {
+							latitude:position.coords.latitude, 
+							longitude:position.coords.longitude
+					});
+				}
+			});
+
+
 	
 			
 	 	}

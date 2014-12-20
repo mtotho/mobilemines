@@ -33,6 +33,7 @@ angular.module('mobileminesApp')
             }
         };
 
+        console.log("updating user location");
          ref.child(uid).update(user);
 
       },  
