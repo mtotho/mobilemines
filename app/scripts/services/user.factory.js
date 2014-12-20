@@ -17,13 +17,12 @@ angular.module('mobileminesApp')
 
     // Public API here
     return {
-      getUserById: function (uid) {
+      getUserById: function (uid, callback) {
         var ref = API.getRef().child("users").child(uid);
-        var sync = $firebase(ref);
-
-        var user = sync.$asObject();
+    
+      
+        ref.on("value", callback);
        
-        return user;
       },
 
       //update the firebase user data

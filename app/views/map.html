@@ -6,6 +6,22 @@
 		top:25px;
 		left:25px;
 	}
+	.face {
+	  border-radius: 30px;
+
+	  width: 64px;
+	  height:64px;
+	  margin: 16px; 
+	}
+
+	#leftNav .md-toolbar-tools.md-tall{
+		min-height:auto;
+		height:auto;
+	}
+	#leftNav .md-toolbar-tools{
+		min-height:32px;
+		height:32px;
+	}
 </style>
 
 <div id="mapMenuFabs">
@@ -17,18 +33,27 @@
 </div>
 
 
-<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
-      <md-toolbar class="md-theme-indigo">
-        <h1 class="md-toolbar-tools">Mobile Mines</h1>
+<md-sidenav id="leftNav" class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
+      <md-toolbar class="md-theme-indigo md-padding">
+    		
+    		<div ng-hide="appVm.user.isSet===false">
+
+	    		<img class="face" ng-src="{{appVm.user.cachedUserProfile.picture}}" />
+				<h2 style="margin-bottom:10px" class="md-toolbar-tools">{{appVm.user.displayName}}</h2>
+       		</div>
+
+  
+       
       </md-toolbar>
       <md-content class="md-padding">
         <md-button ng-click="vm.closeMenu('left')" class="md-primary" hide-gt-md>
           Close Sidenav Left
         </md-button>
 			
-        <md-button ng-click="appVm.btnLogin()">
+        <md-button ng-show="appVm.user.isSet===false" ng-click="appVm.btnLogin()">
         	Login
         </md-button> 
+
 
 
       </md-content>
