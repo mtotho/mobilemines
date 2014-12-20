@@ -11,21 +11,32 @@ angular.module('mobileminesApp')
   .controller('AppCtrl', function ($scope, userService) {
    	var vm = this;
 
-   	vm.user = {isSet:false};
+  
+
+   	function init(){
+	 	vm.user =
+
+	 	vm.user = userService.checkUser();
+	 	console.log(vm.user);
+   	}
+   	init();
 
 
-   	vm.btnLogin = function(){
-   		userService.login(function(snapshot){
-   			console.log(snapshot.val());
-
-   			$scope.$apply(function(){
-   				vm.user=snapshot.val();
-   			});
+   	vm.login = function(){
+   		userService.login(function(user){
+   			console.log(user);
+   		
+			vm.user=user;
    			
    		});
 
 
 
+   	}
+
+   	vm.logout = function(){
+   		userService.logout();
+   		vm.user=null;
    	}
   	
    	

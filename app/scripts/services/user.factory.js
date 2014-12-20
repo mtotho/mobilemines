@@ -9,20 +9,23 @@
  */
 angular.module('mobileminesApp')
   .factory('userFactory', function ($firebase, API) {
-     
+     var dog=3;
     
-    
+     var returnDataFeed = function(ref, callback){
+       ref.on("value", function(snapshot){
+          callback(snapshot.val());
+       });
+    }
 
 
 
     // Public API here
     return {
+
       getUserById: function (uid, callback) {
         var ref = API.getRef().child("users").child(uid);
-    
-      
-        ref.on("value", callback);
-       
+
+        returnDataFeed(ref,callback);
       },
 
       //update the firebase user data

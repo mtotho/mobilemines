@@ -18,9 +18,12 @@
 		min-height:auto;
 		height:auto;
 	}
-	#leftNav .md-toolbar-tools{
+	.user_profile .md-toolbar-tools{
 		min-height:32px;
 		height:32px;
+	}
+	#leftNav .md-button{
+		width:100%;
 	}
 </style>
 
@@ -36,10 +39,15 @@
 <md-sidenav id="leftNav" class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
       <md-toolbar class="md-theme-indigo md-padding">
     		
-    		<div ng-hide="appVm.user.isSet===false">
+      		<div ng-show="appVm.user===null">
+      			<h2 class="md-toolbar-tools">Mobile Mines</h1>
+      		</div>
 
-	    		<img class="face" ng-src="{{appVm.user.cachedUserProfile.picture}}" />
-				<h2 style="margin-bottom:10px" class="md-toolbar-tools">{{appVm.user.displayName}}</h2>
+
+    		<div class='user_profile' ng-show="appVm.user!==null">
+
+	    		<img class="face" ng-src="{{appVm.user.google.cachedUserProfile.picture}}" />
+				<h2 style="margin-bottom:10px" class="md-toolbar-tools">{{appVm.user.google.displayName}}</h2>
        		</div>
 
   
@@ -50,11 +58,19 @@
           Close Sidenav Left
         </md-button>
 			
-        <md-button ng-show="appVm.user.isSet===false" ng-click="appVm.btnLogin()">
+        <md-button ng-show="appVm.user===null" ng-click="appVm.login()">
         	Login
         </md-button> 
 
 
+        <div ng-show="appVm.user!==null">
+        	<md-divider></md-divider>
+    		<md-button  ng-click="appVm.logout()">
+        		Logout
+   			</md-button> 
+
+        </div>
+     
 
       </md-content>
 </md-sidenav>
