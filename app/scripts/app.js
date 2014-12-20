@@ -21,8 +21,15 @@ angular
     'ngMaterial',
     'uiGmapgoogle-maps',
     'firebase'
-  ])
-  .config(function ($routeProvider,$locationProvider, uiGmapGoogleMapApiProvider) {
+  ]);
+
+  angular.module('mobileminesApp').constant('CONFIG',{
+    firebase_url:'https://fiery-torch-4462.firebaseio.com/'
+
+  });
+
+
+ angular.module('mobileminesApp').config(function ($routeProvider,$locationProvider, uiGmapGoogleMapApiProvider) {
 
     uiGmapGoogleMapApiProvider.configure({
         //    key: 'your api key',
@@ -40,6 +47,7 @@ angular
         redirectTo: '/'
       });
   });
+
 
 //helper function
 angular.isUndefinedOrNull = function(val) {

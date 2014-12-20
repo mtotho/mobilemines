@@ -8,37 +8,51 @@
  * Factory in the mobileminesApp.
  */
 angular.module('mobileminesApp')
-  .factory('userFactory', function ($firebase, API) {
-     var dog=3;
+  .factory('userFactory', function ($firebase, CONFIG) {
     
-     var returnDataFeed = function(ref, callback){
-       ref.on("value", function(snapshot){
+    var ref = new Firebase(CONFIG.firebase_url+"users/");
+     
+
+
+    var returnDataFeed = function(Ref, callback){
+       Ref.on("value", function(snapshot){
           callback(snapshot.val());
        });
     }
 
 
-
     // Public API here
     return {
 
-      getUserById: function (uid, callback) {
-        var ref = API.getRef().child("users").child(uid);
+      setUserLocation: function(uid, location){
 
-        returnDataFeed(ref,callback);
+        var user={
+            location:{
+              latitude:location.latitude,
+              longitude:location.longitude
+            }
+        };
+
+         ref.child(uid).update(user);
+
+      },  
+
+      getUserById: function (uid, callback) {
+        var userRef = ref.child(uid);
+
+        returnDataFeed(userRef,callback);
       },
 
       //update the firebase user data
       updateUser: function(googleObject){
-        var ref = API.getRef().child("users");
+    
 
         var user={
           uid:googleObject.uid,
-          displayName:googleObject.google.displayName,
-          cachedUserProfile:googleObject.google.cachedUserProfile
+          google:googleObject.google
         };
 
-         ref.child(user.uid).update(user);
+        ref.child(user.uid).update(user);
       }
     };
   });

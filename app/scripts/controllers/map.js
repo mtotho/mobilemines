@@ -8,7 +8,7 @@
  * Controller of the mobileminesApp
  */
 angular.module('mobileminesApp')
-  .controller('MapCtrl', function ($scope, userService, $mdSidenav) {
+  .controller('MapCtrl', function ($scope, userService, API,$mdSidenav) {
  		var vm=this;
 
  		
@@ -20,7 +20,7 @@ angular.module('mobileminesApp')
 					latitude:45,
 					longitude:-73
 				},
-				zoom:20,
+				zoom:19,
 	 			options:{
 	 				panControl:false,
 	 				streetViewControl:false,
@@ -31,7 +31,7 @@ angular.module('mobileminesApp')
 			};
 
 
-			setCurrentPosition();
+			watchPosition();
 
  		}
  		init();	
@@ -48,17 +48,35 @@ angular.module('mobileminesApp')
 	  	};
 
 
-	  	function setCurrentPosition(){
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(function(position){
-					$scope.$apply(function(){
-					 	vm.map.center={
-					 		latitude:position.coords.latitude,
-					    	longitude:position.coords.longitude
-					 	}
-					});
+	  	function watchPosition(){
+  		 	if (navigator.geolocation) {
+   				navigator.geolocation.watchPosition(setCurrentPosition);
+		    } else {
+		        x.innerHTML = "Geolocation is not supported by this browser.";
+		    }
+	  	}
+
+
+	  	function setCurrentPosition(position){
+			
+			$scope.$apply(function(){
+			 	vm.map.center={
+			 		latitude:position.coords.latitude,
+			    	longitude:position.coords.longitude
+			 	}
+			 	
+			});
+
+			var user = userService.checkUser();
+			
+			if(user!==null){
+				API.user.setUserLocation(user.uid, {
+						latitude:position.coords.latitude, 
+						longitude:position.coords.longitude
 				});
 			}
+	
+			
 	 	}
 
 

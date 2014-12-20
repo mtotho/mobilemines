@@ -8,7 +8,7 @@
  * Service in the mobileminesApp.
  */
 angular.module('mobileminesApp')
-  .service('userService', function ($cookieStore, $firebaseAuth, API, userFactory) {
+  .service('userService', function ($cookieStore, $firebaseAuth, API) {
     // AngularJS will instantiate a singleton by calling "new" on this function
   // ...
     var userCookieName = "mobilemines-user";
@@ -57,8 +57,8 @@ angular.module('mobileminesApp')
         callback(userObject);
 
         //update the firebase entry for the user 
-       // userFactory.updateUser(authData);
-        //userFactory.getUserById(authData.uid,callback);
+        API.user.updateUser(authData);
+        
         
        
       }).catch(function(error) {

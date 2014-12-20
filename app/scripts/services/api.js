@@ -8,23 +8,21 @@
  * Factory in the mobileminesApp.
  */
 angular.module('mobileminesApp')
-  .factory('API', function ($firebase) {
-    var firebase_url="https://fiery-torch-4462.firebaseio.com/";
+  .factory('API', function ($firebase, CONFIG, userFactory) {
+   // var firebase_url="https://fiery-torch-4462.firebaseio.com/";
   
     //var sync = $firebase(ref);
-
-
-
 
   
     // Public API here
     return {
       getRef: function () {
        
-        var ref = new Firebase(firebase_url);
+        var ref = new Firebase(CONFIG.firebase_url);
      
         return ref;
-      }
+      },
+      user:userFactory
 
 
     };
