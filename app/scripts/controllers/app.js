@@ -8,8 +8,14 @@
  * Controller of the mobileminesApp
  */
 angular.module('mobileminesApp')
-  .controller('AppCtrl', function ($scope) {
-   
+  .controller('AppCtrl', function ($scope, userService) {
+   	var vm = this;
 
-   
+
+   	vm.btnLogin = function(){
+   		userService.login();
+   		
+   	}
+  	
+   	
   });

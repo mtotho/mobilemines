@@ -8,7 +8,7 @@
  * Controller of the mobileminesApp
  */
 angular.module('mobileminesApp')
-  .controller('MapCtrl', function ($scope, User, $mdSidenav) {
+  .controller('MapCtrl', function ($scope, userService, $mdSidenav) {
  		var vm=this;
 
  		

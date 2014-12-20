@@ -19,16 +19,17 @@ angular
     'ngSanitize',
     'ngTouch',
     'ngMaterial',
-    'uiGmapgoogle-maps'
+    'uiGmapgoogle-maps',
+    'firebase'
   ])
-  .config(function ($routeProvider, uiGmapGoogleMapApiProvider) {
+  .config(function ($routeProvider,$locationProvider, uiGmapGoogleMapApiProvider) {
 
     uiGmapGoogleMapApiProvider.configure({
         //    key: 'your api key',
         v: '3.17',
         libraries: 'weather,geometry,visualization'
     });
-
+    //$locationProvider.html5Mode(true);
 
     $routeProvider
       .when('/', {
@@ -42,5 +43,6 @@ angular
 
 //helper function
 angular.isUndefinedOrNull = function(val) {
+  console.log(val);
     return angular.isUndefined(val) || val === null 
 }

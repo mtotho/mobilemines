@@ -8,7 +8,7 @@
  * Service in the mobileminesApp.
  */
 angular.module('mobileminesApp')
-  .service('User', function ($cookieStore) {
+  .service('userService', function ($cookieStore, $firebaseAuth, userFactory) {
     // AngularJS will instantiate a singleton by calling "new" on this function
   // ...
     var userCookieName = "mobilemines-user";
@@ -40,6 +40,24 @@ angular.module('mobileminesApp')
     this.createUser = function(name){
       //firebase insert code
       //get id from firebase, set cookie
+    }
+
+    this.login = function(){
+      var ref = new Firebase("https://fiery-torch-4462.firebaseio.com/");
+
+      var auth = $firebaseAuth(ref);
+      auth.$authWithOAuthPopup("google").then(function(authData) {
+        //console.log(authData);
+
+      //update the firebase entry for the user 
+      userFactory.updateUser(authData);
+      console.log(userFactory.getUserById(authData.uid));
+
+
+        console.log("Logged in as:", authData.uid);
+      }).catch(function(error) {
+        console.error("Authentication failed: ", error);
+      });
     }
 
 
