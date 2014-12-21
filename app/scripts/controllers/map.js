@@ -64,7 +64,7 @@ angular.module('mobileminesApp')
 
 	  	function bindUserToMap(user){
 	  		
-	  		uiGmapGoogleMapApi.then(function(maps){
+	  		//uiGmapGoogleMapApi.then(function(maps){
 				var userMarker = {
 		  			id:user.uid,
 		  			latitude:user.location.latitude,
@@ -96,7 +96,7 @@ angular.module('mobileminesApp')
   				}
 	  			//});
 
-	  		});
+	  		//});
 	  	
 	  	
 	  	}
