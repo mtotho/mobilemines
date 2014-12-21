@@ -88,15 +88,18 @@ angular.module('mobileminesApp')
 		  		var markerMatchIndex = $filter('getByParam')(vm.userMarkers, "id", userMarker.id);
 
 
-		  				
-  				//No match, add user to array
-  				if(markerMatchIndex===null){
-  					vm.userMarkers.push(userMarker);
-  				
-  				}else{
-  					//overwrite existing marker
-  					vm.userMarkers[markerMatchIndex]=userMarker;
-  				}
+		  		$scope.$apply(function(){
+	  				//No match, add user to array
+	  				if(markerMatchIndex===null){
+	  					vm.userMarkers.push(userMarker);
+	  				
+	  				}else{
+	  					//overwrite existing marker
+	  					vm.userMarkers[markerMatchIndex]=userMarker;
+	  				}
+
+		  		});	
+  			
 	  			//});
 
 	  		//});
