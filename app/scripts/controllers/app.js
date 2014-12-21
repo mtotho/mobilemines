@@ -20,6 +20,10 @@ angular.module('mobileminesApp')
 			console.log("==Getting Authenticated User==");
 			console.log(user);
 			console.log("");
+
+			if(!angular.isUndefinedOrNull(user)){
+				$rootScope.$broadcast('userAuthenticatedSuccess');
+			}
 			vm.user=user;
 
  		});

@@ -63,8 +63,8 @@ angular.module('mobileminesApp')
 
       //update the firebase user data
       updateUser: function(googleObject){
-    
-
+      console.log(googleObject);
+        
         var user={
           uid:googleObject.uid,
           google:googleObject.google

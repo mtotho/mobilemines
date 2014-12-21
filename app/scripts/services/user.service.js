@@ -43,8 +43,14 @@ angular.module('mobileminesApp')
 
     this.getUserAsync = function(callback){
         var ref = API.getRef();
-     
-        ref.onAuth(callback);
+      
+        ref.onAuth(function(user){
+          if(!angular.isUndefinedOrNull(user)){
+              API.users.updateUser(user);
+          }
+    
+          callback(user);
+        });
     }
 
     this.createUser = function(name){

@@ -28,6 +28,8 @@ angular.module('mobileminesApp')
 	 			userMarkerEvents:{},
 	 			events:{}
 			};
+			//watch the client position
+			watchPosition();
 
 			//Get each user one by 1. Bind to map. This will also be invoked if new users are added. not invoked if there is a change to existing user
 			API.users.getUsers(function(user){
@@ -42,13 +44,13 @@ angular.module('mobileminesApp')
  			//This is invoked anytime a change to any users property is detected
  			API.users.getUserChangeFeed(function(user){
 				console.log("==User Change Detected: " + user.uid);
+				console.log(user);
  				if(user.hasOwnProperty("location")){		
 					bindUserToMap(user);
 				}
  			});
 
- 			//watch the client position
-			watchPosition();
+ 			
 
  		}
  		init();	
@@ -63,7 +65,7 @@ angular.module('mobileminesApp')
 	  	};
 
 	  	function bindUserToMap(user){
-	  		
+	  			//console.log(user);
 	  		//uiGmapGoogleMapApi.then(function(maps){
 				var userMarker = {
 		  			id:user.uid,
@@ -84,7 +86,8 @@ angular.module('mobileminesApp')
 
 		  		//search the array for existing user marker
 		  		var markerMatchIndex = $filter('getByParam')(vm.userMarkers, "id", userMarker.id);
-//	$scope.$apply(function(){
+
+
 		  				
   				//No match, add user to array
   				if(markerMatchIndex===null){
@@ -136,6 +139,17 @@ angular.module('mobileminesApp')
 					
 	 	}
 
+	 	//set the user location right away if they authenticate
+ 		$rootScope.$on("userAuthenticatedSuccess", function(){
+			var user = userService.getUser();
+
+			if(user){
+				API.users.setUserLocation(user.uid,{
+					latitude:vm.map.center.latitude,
+					longitude:vm.map.center.longitude
+				});
+			}
+ 		});
 
 		$scope.$on('$viewContentLoaded', function () {
 			setMapHeight();
