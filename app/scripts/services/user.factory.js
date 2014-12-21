@@ -24,6 +24,12 @@ angular.module('mobileminesApp')
     // Public API here
     return {
 
+      getUsers:function(callback){
+
+        returnDataFeed(ref, callback);
+
+      },
+
       setUserLocation: function(uid, location){
 
         var user={

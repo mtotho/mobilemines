@@ -30,6 +30,11 @@ angular.module('mobileminesApp')
 	 			events:{}
 			};
 
+			//Get list of users. This is updated anytime user is added or updated
+			API.user.getUsers(function(user){
+				console.log("getting users");
+				console.log(user);
+			});
 
 			watchPosition();
 
@@ -70,7 +75,7 @@ angular.module('mobileminesApp')
 			userService.checkUser(function(user){
 
 				if(user!==null){
-					console.log(position);
+				
 					API.user.setUserLocation(user.uid, {
 							latitude:position.coords.latitude, 
 							longitude:position.coords.longitude

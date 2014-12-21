@@ -36,11 +36,12 @@ angular.module('mobileminesApp')
 
     this.checkUser = function(callback){
         var ref = API.getRef();
-        var userObject = ref.getAuth();
+        userObject = ref.getAuth();
+        ref.onAuth(callback);
        // console.log(authData);
         //userObject = authData;
         //return userObject;
-        callback(userObject);
+       // / callback(userObject);
     }
 
     this.createUser = function(name){

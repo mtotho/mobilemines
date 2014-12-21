@@ -8,18 +8,24 @@
  * Controller of the mobileminesApp
  */
 angular.module('mobileminesApp')
-  .controller('AppCtrl', function ($scope, userService) {
+  .controller('AppCtrl', function ($scope, $rootScope, userService) {
    	var vm = this;
 
   
 
    	function init(){
-	 	vm.user =
+	 
 
-	 	userService.checkUser(function(user){
-	 		vm.user=user;
-	 		console.log(user);
-	 	});
+	 		$rootScope.$on('$viewContentLoaded', function(event, toState, toParams, fromState, fromParams){ 
+	 			userService.checkUser(function(user){
+	 		
+ 				vm.user=user;
+
+	 		});
+
+		});
+
+	 
 
 	 
 	 
@@ -32,7 +38,8 @@ angular.module('mobileminesApp')
    			console.log(user);
    		
 			vm.user=user;
-   			
+   			window.location.reload();
+
    		});
 
 
