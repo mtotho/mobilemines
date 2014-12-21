@@ -53,7 +53,7 @@ angular.module('mobileminesApp')
       var ref = API.getRef();
 
       var auth = $firebaseAuth(ref);  
-      auth.$authWithOAuthPopup("google").then(function(authData) {
+      auth.$authWithOAuthRedirect("google").then(function(authData) {
         userObject = authData;
 
         callback(userObject);
