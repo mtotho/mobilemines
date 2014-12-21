@@ -34,14 +34,17 @@ angular.module('mobileminesApp')
         
     }
 
-    this.checkUser = function(callback){
+    this.getUser = function(){
         var ref = API.getRef();
         userObject = ref.getAuth();
+
+       return userObject;
+    }
+
+    this.getUserAsync = function(callback){
+        var ref = API.getRef();
+     
         ref.onAuth(callback);
-       // console.log(authData);
-        //userObject = authData;
-        //return userObject;
-       // / callback(userObject);
     }
 
     this.createUser = function(name){
@@ -56,11 +59,13 @@ angular.module('mobileminesApp')
       auth.$authWithOAuthRedirect("google").then(function(authData) {
         userObject = authData;
 
-        callback(userObject);
 
         //update the firebase entry for the user 
-        API.user.updateUser(authData);
+        API.user.updateUser(userObject);
         
+
+        callback(userObject);
+
         
        
       }).catch(function(error) {

@@ -14,14 +14,18 @@ angular.module('mobileminesApp')
   
 
    	function init(){
-	 
 
+   		//It appears that the block below will be call automatically any time the users authentication status changes
+	 	userService.getUserAsync(function(user){
+	 				
+	 				console.log("getUserAsync")
+	 				console.log(user);
+ 					vm.user=user;
+
+ 		});
+   		
 	 		$rootScope.$on('$viewContentLoaded', function(event, toState, toParams, fromState, fromParams){ 
-	 			userService.checkUser(function(user){
-	 		
- 				vm.user=user;
 
-	 		});
 
 		});
 
@@ -35,10 +39,9 @@ angular.module('mobileminesApp')
 
    	vm.login = function(){
    		userService.login(function(user){
-   			console.log(user);
-   		
-			vm.user=user;
-   			window.location.reload();
+
+   			//oauth redirect reloads the page getUserAsync above will handle getting users after refresh
+   			//if we use oauth popout (not sure which is better) we might need to do work here
 
    		});
 

@@ -8,7 +8,7 @@
  * Controller of the mobileminesApp
  */
 angular.module('mobileminesApp')
-  .controller('MapCtrl', function ($scope, userService, API,$mdSidenav) {
+  .controller('MapCtrl', function ($scope, $rootScope, userService, API,$mdSidenav) {
  		var vm=this;
 
  		vm.userMarkers = [];
@@ -16,10 +16,7 @@ angular.module('mobileminesApp')
 
  		function init(){
  			vm.map={
-				center:{
-					latitude:45,
-					longitude:-73
-				},
+				
 				zoom:19,
 	 			options:{
 	 				panControl:false,
@@ -34,16 +31,21 @@ angular.module('mobileminesApp')
 
 			//Get list of users. This is updated anytime user is added or updated
 			API.user.getUsers(function(users){
-				console.log("getting users");
-			
-				
+							
 				vm.userMarkers = new Array();
 				angular.forEach(users,function(value,key){
-					bindUserToMap(value);
+					if(value.hasOwnProperty("location")){
+						//console.log(key);
+					
+						bindUserToMap(key,value);
+					}
+				
 				});
 
 			});
- 
+ 			
+
+ 			//watch the client position
 			watchPosition();
 
  		}
@@ -58,17 +60,23 @@ angular.module('mobileminesApp')
 	    	$mdSidenav(menu).toggle();
 	  	};
 
-	  	function bindUserToMap(user){
+	  	function bindUserToMap(uid,user){
+	  		
 	  		var userMarker = {
-	  			id:user.uid,
+	  			id:uid,
 	  			latitude:user.location.latitude,
-	  			longitude:user.location.longitude
+	  			longitude:user.location.longitude,
+	  		}
+	  		
+	  		if(user.hasOwnProperty("cachedUserProfile")){
+	  			
+	  			userMarker.icon=user.cachedUserProfile.picture;
 	  		}
 	  		$scope.$apply(function(){
 	  				vm.userMarkers.push(userMarker);
 	  			});
 	  	
-	  		console.log(user);
+	  		//console.log(user);
 	  	}
 
 
@@ -83,6 +91,9 @@ angular.module('mobileminesApp')
 
 	  	function setCurrentPosition(position){
 			
+	  		console.log("Set Position");
+	  		console.log(position);
+
 			$scope.$apply(function(){
 			 	vm.map.center={
 			 		latitude:position.coords.latitude,
@@ -91,20 +102,18 @@ angular.module('mobileminesApp')
 			 	
 			});
 
-			userService.checkUser(function(user){
+			var user = userService.getUser();
 
-				if(user!==null){
-				
-					API.user.setUserLocation(user.uid, {
-							latitude:position.coords.latitude, 
-							longitude:position.coords.longitude
-					});
-				}
-			});
+			if(user){
 
+				API.user.setUserLocation(user.uid, {
+						latitude:position.coords.latitude, 
+						longitude:position.coords.longitude
+				});
 
-	
-			
+			}
+
+					
 	 	}
 
 
