@@ -49,6 +49,20 @@ angular
   });
 
 
+angular.module('mobileminesApp').filter('getByParam', function() {
+  return function(input,paramToMatch, value) {
+    var i=0; 
+    var len=input.length;
+    for (i; i<len; i++) {
+      
+      if (input[i][paramToMatch] === value) {
+        return i;
+      }
+    }
+    return null;
+  }
+});
+
 //helper function
 angular.isUndefinedOrNull = function(val) {
   console.log(val);

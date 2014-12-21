@@ -61,7 +61,7 @@ angular.module('mobileminesApp')
 
 
         //update the firebase entry for the user 
-        API.user.updateUser(userObject);
+        API.users.updateUser(userObject);
         
 
         callback(userObject);

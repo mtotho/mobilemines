@@ -15,7 +15,8 @@ angular.module('mobileminesApp')
 
 
     var returnDataFeed = function(Ref, callback){
-       Ref.on("value", function(snapshot){
+       Ref.on("child_added", function(snapshot){
+
           callback(snapshot.val());
        });
     }
@@ -24,10 +25,20 @@ angular.module('mobileminesApp')
     // Public API here
     return {
 
+      //This will watch changes to existing users
+      getUserChangeFeed: function(callback){
+        
+        ref.on("child_changed", function(snapshot){
+          callback(snapshot.val());
+        });
+      },
+
+      //This will give each user back 1 by 1, and any additional future users added
       getUsers:function(callback){
+         ref.on("child_added", function(snapshot){
 
-        returnDataFeed(ref, callback);
-
+            callback(snapshot.val());
+         });
       },
 
       setUserLocation: function(uid, location){

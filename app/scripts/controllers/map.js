@@ -8,7 +8,7 @@
  * Controller of the mobileminesApp
  */
 angular.module('mobileminesApp')
-  .controller('MapCtrl', function ($scope, $rootScope, userService, API,$mdSidenav) {
+  .controller('MapCtrl', function ($scope, $rootScope, $filter,userService, API,$mdSidenav) {
  		var vm=this;
 
  		vm.userMarkers = [];
@@ -29,21 +29,23 @@ angular.module('mobileminesApp')
 	 			events:{}
 			};
 
-			//Get list of users. This is updated anytime user is added or updated
-			API.user.getUsers(function(users){
-							
-				vm.userMarkers = new Array();
-				angular.forEach(users,function(value,key){
-					if(value.hasOwnProperty("location")){
-						//console.log(key);
-					
-						bindUserToMap(key,value);
-					}
-				
-				});
+			//Get each user one by 1. Bind to map. This will also be invoked if new users are added. not invoked if there is a change to existing user
+			API.users.getUsers(function(user){
+				console.log("==New User Detected: " + user.uid);
 
+				if(user.hasOwnProperty("location")){		
+					bindUserToMap(user);
+				}
+	
 			});
- 			
+
+ 			//This is invoked anytime a change to any users property is detected
+ 			API.users.getUserChangeFeed(function(user){
+				console.log("==User Change Detected: " + user.uid);
+ 				if(user.hasOwnProperty("location")){		
+					bindUserToMap(user);
+				}
+ 			});
 
  			//watch the client position
 			watchPosition();
@@ -60,23 +62,33 @@ angular.module('mobileminesApp')
 	    	$mdSidenav(menu).toggle();
 	  	};
 
-	  	function bindUserToMap(uid,user){
+	  	function bindUserToMap(user){
 	  		
 	  		var userMarker = {
-	  			id:uid,
+	  			id:user.uid,
 	  			latitude:user.location.latitude,
 	  			longitude:user.location.longitude,
 	  		}
 	  		
 	  		if(user.hasOwnProperty("cachedUserProfile")){
-	  			
 	  			userMarker.icon=user.cachedUserProfile.picture;
 	  		}
+
+	  		//search the array for existing user marker
+	  		var markerMatchIndex = $filter('getByParam')(vm.userMarkers, "id", userMarker.id);
+
 	  		$scope.$apply(function(){
-	  				vm.userMarkers.push(userMarker);
-	  			});
+	  				
+  				//No match, add user to array
+  				if(markerMatchIndex===null){
+  					vm.userMarkers.push(userMarker);
+  				
+  				}else{
+  					//overwrite existing marker
+  					vm.userMarkers[markerMatchIndex]=userMarker;
+  				}
+  			});
 	  	
-	  		//console.log(user);
 	  	}
 
 
@@ -91,9 +103,7 @@ angular.module('mobileminesApp')
 
 	  	function setCurrentPosition(position){
 			
-	  		console.log("Set Position");
-	  		console.log(position);
-
+	
 			$scope.$apply(function(){
 			 	vm.map.center={
 			 		latitude:position.coords.latitude,
@@ -106,7 +116,7 @@ angular.module('mobileminesApp')
 
 			if(user){
 
-				API.user.setUserLocation(user.uid, {
+				API.users.setUserLocation(user.uid, {
 						latitude:position.coords.latitude, 
 						longitude:position.coords.longitude
 				});

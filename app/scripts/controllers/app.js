@@ -17,21 +17,13 @@ angular.module('mobileminesApp')
 
    		//It appears that the block below will be call automatically any time the users authentication status changes
 	 	userService.getUserAsync(function(user){
-	 				
-	 				console.log("getUserAsync")
-	 				console.log(user);
- 					vm.user=user;
+			console.log("==Getting Authenticated User==");
+			console.log(user);
+			console.log("");
+			vm.user=user;
 
  		});
    		
-	 		$rootScope.$on('$viewContentLoaded', function(event, toState, toParams, fromState, fromParams){ 
-
-
-		});
-
-	 
-
-	 
 	 
    	}
    	init();
