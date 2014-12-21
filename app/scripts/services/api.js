@@ -11,7 +11,7 @@ angular.module('mobileminesApp')
   .factory('API', function ($firebase, CONFIG, userFactory, mineFactory) {
    // var firebase_url="https://fiery-torch-4462.firebaseio.com/";
   
-    //var sync = $firebase(ref);
+    //var sync = $ddfirebase(ref);
 
   
     // Public API here

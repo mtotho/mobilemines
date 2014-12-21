@@ -8,7 +8,7 @@
  * Controller of the mobileminesApp
  */
 angular.module('mobileminesApp')
-  .controller('MapCtrl', function ($scope, $rootScope, $filter,userService, uiGmapGoogleMapApi,API,$mdSidenav) {
+  .controller('MapCtrl', function ($scope, $rootScope, $filter,userService, API,uiGmapGoogleMapApi,$mdSidenav) {
  		var vm=this;
 
  		vm.userMarkers = [];
