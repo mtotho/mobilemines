@@ -8,7 +8,7 @@
  * Controller of the mobileminesApp
  */
 angular.module('mobileminesApp')
-  .controller('MapCtrl', function ($scope, $rootScope, $filter,userService, API,$mdSidenav) {
+  .controller('MapCtrl', function ($scope, $rootScope, $filter,userService, uiGmapGoogleMapApi,API,$mdSidenav) {
  		var vm=this;
 
  		vm.userMarkers = [];
@@ -64,21 +64,28 @@ angular.module('mobileminesApp')
 
 	  	function bindUserToMap(user){
 	  		
-	  		var userMarker = {
-	  			id:user.uid,
-	  			latitude:user.location.latitude,
-	  			longitude:user.location.longitude,
-	  		}
-	  		
-	  		if(user.hasOwnProperty("cachedUserProfile")){
-	  			userMarker.icon=user.cachedUserProfile.picture;
-	  		}
+	  		uiGmapGoogleMapApi.then(function(maps){
+				var userMarker = {
+		  			id:user.uid,
+		  			latitude:user.location.latitude,
+		  			longitude:user.location.longitude,
+		  			options:{
+		  				title:"No Name"
+		  			}
+		  		}
+		  	
+		  		if(user.hasOwnProperty("google")){
+		  			console.log(user);
+		  			userMarker.options.title=user.google.displayName;
+		  			//userMarker.icon="";
 
-	  		//search the array for existing user marker
-	  		var markerMatchIndex = $filter('getByParam')(vm.userMarkers, "id", userMarker.id);
 
-	  		$scope.$apply(function(){
-	  				
+		  		}
+
+		  		//search the array for existing user marker
+		  		var markerMatchIndex = $filter('getByParam')(vm.userMarkers, "id", userMarker.id);
+//	$scope.$apply(function(){
+		  				
   				//No match, add user to array
   				if(markerMatchIndex===null){
   					vm.userMarkers.push(userMarker);
@@ -87,7 +94,10 @@ angular.module('mobileminesApp')
   					//overwrite existing marker
   					vm.userMarkers[markerMatchIndex]=userMarker;
   				}
-  			});
+	  			//});
+
+	  		});
+	  	
 	  	
 	  	}
 
