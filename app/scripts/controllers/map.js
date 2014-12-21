@@ -11,7 +11,7 @@ angular.module('mobileminesApp')
   .controller('MapCtrl', function ($scope, userService, API,$mdSidenav) {
  		var vm=this;
 
- 		
+ 		vm.userMarkers = [];
 
 
  		function init(){
@@ -27,21 +27,27 @@ angular.module('mobileminesApp')
 	 				zoomControl:false
 	 			},
 	 			control:{},
+	 			markersControl:{},
+	 			userMarkerEvents:{},
 	 			events:{}
 			};
 
 			//Get list of users. This is updated anytime user is added or updated
-			API.user.getUsers(function(user){
+			API.user.getUsers(function(users){
 				console.log("getting users");
-				console.log(user);
-			});
+			
+				
+				vm.userMarkers = new Array();
+				angular.forEach(users,function(value,key){
+					bindUserToMap(value);
+				});
 
+			});
+ 
 			watchPosition();
 
  		}
  		init();	
-
-
  		
 
  		vm.closeMenu = function(menu) {
@@ -51,6 +57,19 @@ angular.module('mobileminesApp')
  		vm.openMenu = function(menu) {
 	    	$mdSidenav(menu).toggle();
 	  	};
+
+	  	function bindUserToMap(user){
+	  		var userMarker = {
+	  			id:user.uid,
+	  			latitude:user.location.latitude,
+	  			longitude:user.location.longitude
+	  		}
+	  		$scope.$apply(function(){
+	  				vm.userMarkers.push(userMarker);
+	  			});
+	  	
+	  		console.log(user);
+	  	}
 
 
 	  	function watchPosition(){
