@@ -41,36 +41,29 @@ angular.module('mobileminesApp')
          });
       },
 
-      setUserLocation: function(uid, location){
-
-        var user={
-            location:{
-              latitude:location.latitude,
-              longitude:location.longitude
-            }
+      //updateUser - call this to set or update user. Acts as the datamodel of what goes into the user. add properties here or refactor
+      updateUser: function(userObject){
+        var user= {
+           uid:userObject.uid,
+           google:userObject.google,
+           location:{}
         };
+        
+        if(userObject.hasOwnProperty('location'))
+            user.location=userObject.location;
 
-        console.log("updating user location");
-         ref.child(uid).update(user);
 
+          console.log("updating user location");
+         ref.child(user.uid).update(user);
+
+         return user;
       },  
 
       getUserById: function (uid, callback) {
         var userRef = ref.child(uid);
 
         returnDataFeed(userRef,callback);
-      },
-
-      //update the firebase user data
-      updateUser: function(googleObject){
-      console.log(googleObject);
-        
-        var user={
-          uid:googleObject.uid,
-          google:googleObject.google
-        };
-
-        ref.child(user.uid).update(user);
       }
+
     };
   });

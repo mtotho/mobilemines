@@ -28,33 +28,42 @@ angular.module('mobileminesApp')
 	 			userMarkerEvents:{},
 	 			events:{}
 			};
+
+
 			//watch the client position
-			watchPosition();
+			userService.watchUserPosition(function(position, user){
+
+				$scope.$apply(function(){
+				 	vm.map.center={
+				 		latitude:position.coords.latitude,
+				    	longitude:position.coords.longitude
+				 	}
+				});
+
+				bindUserToMap(user);
+			});
+
+		
 
 			//Get each user one by 1. Bind to map. This will also be invoked if new users are added. not invoked if there is a change to existing user
 			API.users.getUsers(function(user){
-				console.log("==New User Detected: " + user.uid);
-
+				if(user.hasOwnProperty("location")){		
+					bindUserToMap(user);
+				}
+				
 				$mdToast.show({
 	  					template:'<md-toast>'+user.google.displayName + ' has joined</md-toast>', 
 	  					position:'top right'
   				});
-
-				if(user.hasOwnProperty("location")){		
-					bindUserToMap(user);
-				}
-	
 			});
 
  			//This is invoked anytime a change to any users property is detected
  			API.users.getUserChangeFeed(function(user){
-				console.log("==User Change Detected: " + user.uid);
-				console.log(user);
  				if(user.hasOwnProperty("location")){		
 					bindUserToMap(user);
 				}
 
-			$mdToast.show({
+				$mdToast.show({
   					template:'<md-toast>'+user.google.displayName + ' has moved!</md-toast>', 
   					position:'top right'
   				});
@@ -86,29 +95,23 @@ angular.module('mobileminesApp')
 		  				"labelClass":"marker-labels"
 		  			}
 		  		}
-		  	
-		  		if(user.hasOwnProperty("google")){
-		  			console.log(user);
-		  			userMarker.options.title=user.google.displayName;
-					
-					//bug with label anchor when update		  	
-		  			var labelHtml="<div>";
-		  			labelHtml += "<img class='face' style='width:48px; height:48px' src='"+ user.google.cachedUserProfile.picture +"' />";
-		  			labelHtml += "<p>" + user.google.displayName + "</p>";
-		  			labelHtml +="</div>";
+	  	
+	  			userMarker.options.title=user.google.displayName;
+				
+				//bug with label anchor when update		  	
+	  			var labelHtml="<div>";
+	  			labelHtml += "<img class='face' style='width:48px; height:48px' src='"+ user.google.cachedUserProfile.picture +"' />";
+	  			labelHtml += "<p>" + user.google.displayName + "</p>";
+	  			labelHtml +="</div>";
 
 
-		  			userMarker.icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
-		  			userMarker.options.labelContent=labelHtml;
-		  				
-		  		
-		  		
-
-
-		  		}
+	  			userMarker.icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+	  			userMarker.options.labelContent=labelHtml;
+	  				
 
 		  		//search the array for existing user marker
 		  		var markerMatchIndex = $filter('getByParam')(vm.userMarkers, "id", userMarker.id);
+
 
 
 		  		$scope.$apply(function(){
@@ -125,50 +128,10 @@ angular.module('mobileminesApp')
 		  		});	
   			
 	  			//});
-
 	  		//});
 	  	
-	  	
 	  	}
 
-
-	  	function watchPosition(){
-  		 	if (navigator.geolocation) {
-   				navigator.geolocation.watchPosition(setCurrentPosition);
-		    } else {
-		        x.innerHTML = "Geolocation is not supported by this browser.";
-		    }
-	  	}
-
-
-	  	function setCurrentPosition(position){
-			
-	
-			$scope.$apply(function(){
-			 	vm.map.center={
-			 		latitude:position.coords.latitude,
-			    	longitude:position.coords.longitude
-			 	}
-			 	
-
-			});
-
-			var user = userService.getUser();
-
-			if(user){
-
-				user.location={
-					latitude:position.coords.latitude,
-					longitude:position.coords.longitude
-				};	
-				bindUserToMap(user); //update user position on map
-
-				API.users.setUserLocation(user.uid, user.location);
-
-			}
-
-					
-	 	}
 
 	 	//set the user location right away if they authenticate
  		$rootScope.$on("userAuthenticatedSuccess", function(){

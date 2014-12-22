@@ -8,19 +8,11 @@
  * Service in the mobileminesApp.
  */
 angular.module('mobileminesApp')
-  .service('userService', function ($cookieStore, $firebaseAuth, API) {
+  .service('userService', function ($firebaseAuth, API) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-  // ...
-    var userCookieName = "mobilemines-user";
 
-    var userCookieObj = $cookieStore.get(userCookieName);
     var userObject;
 
-
-    var sampleCookieObjLiteral={
-      handle:"Brown Mike",
-      id:"asd113r1d113141"
-    }
 
 
 
@@ -46,11 +38,38 @@ angular.module('mobileminesApp')
       
         ref.onAuth(function(user){
           if(!angular.isUndefinedOrNull(user)){
-              API.users.updateUser(user);
+             
+              userObject= API.users.updateUser(user);;
           }
     
-          callback(user);
+          callback(userObject);
         });
+    }
+
+    this.watchUserPosition = function(callback){
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(function(position){
+              
+              //If we have a set userObject
+              if(userObject){
+
+                //set the location
+                userObject.location={
+                  latitude:position.coords.latitude,
+                  longitude:position.coords.longitude
+                } 
+
+                //send the lcoation update to the firebase
+                API.users.updateUser(userObject);
+
+                //callback with the position and user
+                callback(position, userObject);
+              }
+
+          });
+        }else{
+          console.log("browser does not support location ! or location denied");
+        }
     }
 
     this.createUser = function(name){
@@ -63,11 +82,9 @@ angular.module('mobileminesApp')
 
       var auth = $firebaseAuth(ref);  
       auth.$authWithOAuthRedirect("google").then(function(authData) {
-        userObject = authData;
-
 
         //update the firebase entry for the user 
-        API.users.updateUser(userObject);
+        userObject=API.users.updateUser(authData);
         
 
         callback(userObject);
