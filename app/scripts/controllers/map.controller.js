@@ -8,7 +8,7 @@
  * Controller of the mobileminesApp
  */
 angular.module('mobileminesApp')
-  .controller('MapCtrl', function ($scope, $rootScope, $filter,userService, API,uiGmapGoogleMapApi,$mdSidenav) {
+  .controller('MapCtrl', function ($scope, $rootScope, $filter,userService,$mdToast, API,uiGmapGoogleMapApi,$mdSidenav) {
  		var vm=this;
 
  		vm.userMarkers = [];
@@ -35,6 +35,11 @@ angular.module('mobileminesApp')
 			API.users.getUsers(function(user){
 				console.log("==New User Detected: " + user.uid);
 
+				$mdToast.show({
+	  					template:'<md-toast>'+user.google.displayName + ' has joined</md-toast>', 
+	  					position:'top right'
+  				});
+
 				if(user.hasOwnProperty("location")){		
 					bindUserToMap(user);
 				}
@@ -48,6 +53,11 @@ angular.module('mobileminesApp')
  				if(user.hasOwnProperty("location")){		
 					bindUserToMap(user);
 				}
+
+			$mdToast.show({
+  					template:'<md-toast>'+user.google.displayName + ' has moved!</md-toast>', 
+  					position:'top right'
+  				});
  			});
 
  			
@@ -92,7 +102,7 @@ angular.module('mobileminesApp')
 		  			userMarker.options.labelContent=labelHtml;
 		  				
 		  		
-		  			//userMarker.icon="";
+		  		
 
 
 		  		}
