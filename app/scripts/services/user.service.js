@@ -64,6 +64,8 @@ angular.module('mobileminesApp')
 
                 //callback with the position and user
                 callback(position, userObject);
+              }else{
+                callback(position, null);
               }
 
           });

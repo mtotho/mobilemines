@@ -40,7 +40,10 @@ angular.module('mobileminesApp')
 				 	}
 				});
 
-				bindUserToMap(user);
+				if(!angular.isUndefinedOrNull(user)){
+					bindUserToMap(user);
+				}
+				
 			});
 
 		
