@@ -17,7 +17,7 @@ angular.module('mobileminesApp')
  		function init(){
  			vm.map={
 				
-				zoom:19,
+				zoom:18,
 	 			options:{
 	 				panControl:false,
 	 				streetViewControl:false,
@@ -72,13 +72,26 @@ angular.module('mobileminesApp')
 		  			latitude:user.location.latitude,
 		  			longitude:user.location.longitude,
 		  			options:{
-		  				title:"No Name"
+		  				//title:"No Name",
+
 		  			}
 		  		}
 		  	
 		  		if(user.hasOwnProperty("google")){
 		  			console.log(user);
 		  			userMarker.options.title=user.google.displayName;
+		  	
+		  			var labelHtml="";
+		  			labelHtml += "<img class='face' style='width:48px; height:48px' src='"+ user.google.cachedUserProfile.picture +"' />";
+		  			labelHtml += "<p>" + user.google.displayName + "</p>";
+
+
+		  			userMarker.icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
+		  			userMarker.options={
+		  				"labelContent":labelHtml,
+		  				"labelAnchor":"40 81",
+		  				"labelClass":"marker-labels"
+		  			}
 		  			//userMarker.icon="";
 
 
