@@ -72,26 +72,26 @@ angular.module('mobileminesApp')
 		  			latitude:user.location.latitude,
 		  			longitude:user.location.longitude,
 		  			options:{
-		  				//title:"No Name",
-
+		  				"labelAnchor":"40 81",
+		  				"labelClass":"marker-labels"
 		  			}
 		  		}
 		  	
 		  		if(user.hasOwnProperty("google")){
 		  			console.log(user);
 		  			userMarker.options.title=user.google.displayName;
-		  	
-		  			var labelHtml="";
+					
+					//bug with label anchor when update		  	
+		  			var labelHtml="<div>";
 		  			labelHtml += "<img class='face' style='width:48px; height:48px' src='"+ user.google.cachedUserProfile.picture +"' />";
 		  			labelHtml += "<p>" + user.google.displayName + "</p>";
+		  			labelHtml +="</div>";
 
 
 		  			userMarker.icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
-		  			userMarker.options={
-		  				"labelContent":labelHtml,
-		  				"labelAnchor":"40 81",
-		  				"labelClass":"marker-labels"
-		  			}
+		  			userMarker.options.labelContent=labelHtml;
+		  				
+		  		
 		  			//userMarker.icon="";
 
 
@@ -102,6 +102,7 @@ angular.module('mobileminesApp')
 
 
 		  		$scope.$apply(function(){
+		  			userMarker.options.labelAnchor="40 81";
 	  				//No match, add user to array
 	  				if(markerMatchIndex===null){
 	  					vm.userMarkers.push(userMarker);
@@ -139,16 +140,20 @@ angular.module('mobileminesApp')
 			    	longitude:position.coords.longitude
 			 	}
 			 	
+
 			});
 
 			var user = userService.getUser();
 
 			if(user){
 
-				API.users.setUserLocation(user.uid, {
-						latitude:position.coords.latitude, 
-						longitude:position.coords.longitude
-				});
+				user.location={
+					latitude:position.coords.latitude,
+					longitude:position.coords.longitude
+				};	
+				bindUserToMap(user); //update user position on map
+
+				API.users.setUserLocation(user.uid, user.location);
 
 			}
 
