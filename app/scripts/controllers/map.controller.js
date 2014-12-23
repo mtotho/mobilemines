@@ -15,6 +15,7 @@ angular.module('mobileminesApp')
 
 
  		function init(){
+ 			
  			vm.map={
 				
 				zoom:17,
@@ -75,19 +76,26 @@ angular.module('mobileminesApp')
 
 			//Get each user one by 1. Bind to map. This will also be invoked if new users are added. not invoked if there is a change to existing user
 			API.users.getUsers(function(user){
-				if(user.hasOwnProperty("location")){		
+
+				if(user.hasOwnProperty("location")){	
+
 					bindUserToMap(user);
 				}
+
+					//BUG: this toast appears to work, but there is a weird console error "Uncaught TypeError: undefined is not a function --firebase.js:26"
+					//comment out and it is fine. all user objects appear in tact
+				//	$mdToast.show({
+		  			//		template:'<md-toast>'+user.google.displayName + ' has joined</md-toast>', 
+		  		//			hideDelay:4000
+	  				//});
+					//}
 				
-				$mdToast.show({
-	  					template:'<md-toast>'+user.google.displayName + ' has joined</md-toast>', 
-	  					position:'top right',
-	  					hideDelay:4000
-  				});
+
 			});
 
  			//This is invoked anytime a change to any users property is detected
  			API.users.getUserChangeFeed(function(user){
+ 			
  				if(user.hasOwnProperty("location")){		
 					bindUserToMap(user);
 				}
@@ -114,13 +122,21 @@ angular.module('mobileminesApp')
 	  	};
 
 
-	  	//TODO: refactor
+	  	//TODO: refactor. different spot? 3 way binding? 
 	  	//creates a marker unique to the user.
 	  	//Checks all existing markers in the array for existing marker. if found, replaces old marker with updated, otherwise pushes to array
 	  	function bindUserToMap(user){
 	  			
+	  			//use this uiGMap line if you need access to google sdk objects directly
 	  		//uiGmapGoogleMapApi.then(function(maps){
-				var userMarker = {
+				
+
+		  		//search the array for existing user marker
+		  		var markerMatchIndex = $filter('getByParam')(vm.userMarkers, "id", user.uid);
+		  		
+				//No match, create user marker. add to array
+				if(markerMatchIndex===null){
+					var userMarker = {
 		  			id:user.uid,
 		  			latitude:user.location.latitude,
 		  			longitude:user.location.longitude,
@@ -141,25 +157,22 @@ angular.module('mobileminesApp')
 
 	  			userMarker.icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png";
 	  			userMarker.options.labelContent=labelHtml;
-	  				
+				
+	  			$scope.$apply(function(){
+						vm.userMarkers.push(userMarker);
+					});
+				
+				}else{
 
-		  		//search the array for existing user marker
-		  		var markerMatchIndex = $filter('getByParam')(vm.userMarkers, "id", userMarker.id);
+					//This particular scope apply causes an digest error when logging out. doesnt appear to break much
+					$scope.$apply(function(){
+  					//overwrite existing marker position
+  					vm.userMarkers[markerMatchIndex].latitude=user.location.latitude;
+  					vm.userMarkers[markerMatchIndex].longitude=user.location.longitude;
+  				});
+				}
 
-
-
-		  		$scope.$apply(function(){
-		  			userMarker.options.labelAnchor="40 81";
-	  				//No match, add user to array
-	  				if(markerMatchIndex===null){
-	  					vm.userMarkers.push(userMarker);
-	  				
-	  				}else{
-	  					//overwrite existing marker
-	  					vm.userMarkers[markerMatchIndex]=userMarker;
-	  				}
-
-		  		});	
+		  		//});	
   			
 	  			//});
 	  		//});
@@ -181,6 +194,7 @@ angular.module('mobileminesApp')
 			}
  		});
 
+ 		//set map height programmatically 
 		$scope.$on('$viewContentLoaded', function () {
 			setMapHeight();
 	    });

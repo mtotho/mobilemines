@@ -16,7 +16,7 @@ angular.module('mobileminesApp')
     var instance=this;
 
 
-    
+
     this.isUserSet = function() {
         if(!angular.isUndefinedOrNull(userObject)){
           return true;
@@ -46,7 +46,7 @@ angular.module('mobileminesApp')
       
         ref.onAuth(function(user){
           if(!angular.isUndefinedOrNull(user)){
-             
+            
               userObject= API.users.updateUser(user);;
           }
     
@@ -56,7 +56,7 @@ angular.module('mobileminesApp')
 
     //update the users location in the firebase
     this.setUserLocation = function(position){
-        if(userObject){
+        if(!angular.isUndefinedOrNull(userObject)){
             userObject.location={
               latitude:position.latitude,
               longitude:position.longitude
@@ -117,6 +117,9 @@ angular.module('mobileminesApp')
       });
     }
 
+
+    //potential issue with logout - at least on desktop - user location slightly changes (in the like 8th decimal spot) on logout.
+    //causes broadcast of change. Non breaking issue
     this.logout = function(){
       var ref = API.getRef();
 

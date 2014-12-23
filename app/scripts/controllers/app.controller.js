@@ -23,8 +23,11 @@ angular.module('mobileminesApp')
 
 			if(!angular.isUndefinedOrNull(user)){
 				$rootScope.$broadcast('userAuthenticatedSuccess');
+				vm.user=user;
+			}else{
+				vm.user=null;
 			}
-			vm.user=user;
+			
 
  		});
    		
@@ -40,8 +43,6 @@ angular.module('mobileminesApp')
    			//if we use oauth popout (not sure which is better) we might need to do work here
 
    		});
-
-
 
    	}
 

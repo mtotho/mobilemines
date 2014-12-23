@@ -65,6 +65,6 @@ angular.module('mobileminesApp').filter('getByParam', function() {
 
 //helper function
 angular.isUndefinedOrNull = function(val) {
-  console.log(val);
+
     return angular.isUndefined(val) || val === null 
 }
