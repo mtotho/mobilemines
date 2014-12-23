@@ -8,7 +8,7 @@
  * Controller of the mobileminesApp
  */
 angular.module('mobileminesApp')
-  .controller('MapCtrl', function ($scope, $rootScope, $filter,userService,$mdToast, API,uiGmapGoogleMapApi,$mdSidenav) {
+  .controller('MapCtrl', function ($scope, $rootScope,$mdDialog, $filter,userService,$mdToast, API,uiGmapGoogleMapApi,$mdSidenav) {
  		var vm=this;
 
  		vm.userMarkers = [];
@@ -17,7 +17,7 @@ angular.module('mobileminesApp')
  		function init(){
  			vm.map={
 				
-				zoom:18,
+				zoom:17,
 	 			options:{
 	 				panControl:false,
 	 				streetViewControl:false,
@@ -32,17 +32,42 @@ angular.module('mobileminesApp')
 
 			//watch the client position
 			userService.watchUserPosition(function(position, user){
+				
+				//set default position if position is not supported
+				if(position===null){
+					$scope.$apply(function(){
+						vm.map.center={
+							latitude:40,
+							longitude:-80
+						}
+						vm.map.zoom=6;
 
-				$scope.$apply(function(){
-				 	vm.map.center={
-				 		latitude:position.coords.latitude,
-				    	longitude:position.coords.longitude
-				 	}
-				});
+					});
 
-				if(!angular.isUndefinedOrNull(user)){
-					bindUserToMap(user);
+					 $mdDialog.show(
+				      $mdDialog.alert()
+				        .title('Oops')
+				        .content('404 Location Not Found')
+				        .ariaLabel('No Location')
+				        .ok('Womp womp')
+				    
+				    );
+
+				}else{
+					//set the center of the map to be the users position
+					$scope.$apply(function(){
+					 	vm.map.center={
+					 		latitude:position.coords.latitude,
+					    	longitude:position.coords.longitude
+					 	}
+					});
+
+					//bind user to map
+					if(!angular.isUndefinedOrNull(user)){
+						bindUserToMap(user);
+					}
 				}
+
 				
 			});
 
@@ -56,7 +81,8 @@ angular.module('mobileminesApp')
 				
 				$mdToast.show({
 	  					template:'<md-toast>'+user.google.displayName + ' has joined</md-toast>', 
-	  					position:'top right'
+	  					position:'top right',
+	  					hideDelay:4000
   				});
 			});
 
@@ -68,7 +94,8 @@ angular.module('mobileminesApp')
 
 				$mdToast.show({
   					template:'<md-toast>'+user.google.displayName + ' has moved!</md-toast>', 
-  					position:'top right'
+  					position:'top right',
+  					hideDelay:4000
   				});
  			});
 
@@ -86,8 +113,12 @@ angular.module('mobileminesApp')
 	    	$mdSidenav(menu).toggle();
 	  	};
 
+
+	  	//TODO: refactor
+	  	//creates a marker unique to the user.
+	  	//Checks all existing markers in the array for existing marker. if found, replaces old marker with updated, otherwise pushes to array
 	  	function bindUserToMap(user){
-	  			//console.log(user);
+	  			
 	  		//uiGmapGoogleMapApi.then(function(maps){
 				var userMarker = {
 		  			id:user.uid,
@@ -136,15 +167,17 @@ angular.module('mobileminesApp')
 	  	}
 
 
-	 	//set the user location right away if they authenticate
+	 	//set the user location right away if they authenticate. 
  		$rootScope.$on("userAuthenticatedSuccess", function(){
 			var user = userService.getUser();
 
 			if(user){
-				API.users.setUserLocation(user.uid,{
+
+				userService.setUserLocation({
 					latitude:vm.map.center.latitude,
 					longitude:vm.map.center.longitude
 				});
+			
 			}
  		});
 
