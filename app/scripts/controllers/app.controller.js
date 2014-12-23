@@ -18,8 +18,7 @@ angular.module('mobileminesApp')
    		//It appears that the block below will be call automatically any time the users authentication status changes
 	 	userService.getUserAsync(function(user){
 			console.log("==Getting Authenticated User==");
-			console.log(user);
-			console.log("");
+		
 
 			if(!angular.isUndefinedOrNull(user)){
 				$rootScope.$broadcast('userAuthenticatedSuccess');
